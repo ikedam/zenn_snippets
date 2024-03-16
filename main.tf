@@ -15,7 +15,16 @@ terraform {
 provider "google" {
 }
 
+# GCPのSecret ManagerからAWSの認証情報を取得する。
+# ここでは アクセスキーID:シークレットアクセスキー のフォーマットで入れている。
+data "google_secret_manager_secret_version" "aws_key" {
+  secret = "terraform-aws-key"
+}
+
 provider "aws" {
+  # GCPのSecret Managerから取得した認証情報でアクセスする。
+  access_key = split(":", data.google_secret_manager_secret_version.aws_key.secret_data)[0]
+  secret_key = split(":", data.google_secret_manager_secret_version.aws_key.secret_data)[1]
 }
 
 data "google_project" "project" {

@@ -8,10 +8,7 @@ services:
       - TF_LOG
       # inherit GCP auth
       - CLOUDSDK_CORE_PROJECT
-      # inherit AWS auth
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - AWS_SESSION_TOKEN
+      # inherit AWS configuration
       - AWS_DEFAULT_REGION
     volumes:
       - .:/workspace
