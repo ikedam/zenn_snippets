@@ -12,10 +12,17 @@ terraform {
   }
 }
 
-provider "google" {
+provider "aws" {
 }
 
-provider "aws" {
+# AWS Secrets ManagerからGCPの認証情報(サービスアカウントのJSONキー)を取得する。
+data "aws_secretsmanager_secret_version" "gcp_key" {
+  secret_id = "terraform-gcp-key"
+}
+
+provider "google" {
+  # AWS Secrets Managerから取得した認証情報で認証する。
+  credentials = data.aws_secretsmanager_secret_version.gcp_key.secret_string
 }
 
 data "google_project" "project" {
