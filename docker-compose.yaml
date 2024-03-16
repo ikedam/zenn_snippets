@@ -1,0 +1,20 @@
+version: '3'
+services:
+  terraform:
+    profiles: [dummy]
+    network_mode: bridge
+    image: hashicorp/terraform:1.7.5
+    environment:
+      - TF_LOG
+      # inherit GCP auth
+      - CLOUDSDK_CORE_PROJECT
+      # inherit AWS auth
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - AWS_DEFAULT_REGION
+    volumes:
+      - .:/workspace
+      # inherit GCP auth
+      - ${CLOUDSDK_CONFIG:-${APPDATA:-${HOME:-}/.config}/gcloud}:/root/.config/gcloud
+    working_dir: /workspace
