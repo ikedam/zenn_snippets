@@ -6,4 +6,4 @@ RUN cd /workspace && go build -o /lambda main.go
 FROM public.ecr.aws/lambda/provided:al2023
 
 COPY --from=build /lambda /lambda
-ENTRYPOINT [ "./main" ]
+ENTRYPOINT [ "/lambda" ]

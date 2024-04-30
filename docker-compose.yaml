@@ -1,0 +1,21 @@
+version: '3'
+services:
+  terraform:
+    profiles: [dummy]
+    network_mode: bridge
+    image: hashicorp/terraform:1.7.5
+    environment:
+      - TF_LOG
+      # inherit AWS auth
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - AWS_DEFAULT_REGION
+      - AWS_PROFILE
+    volumes:
+      - .:/workspace
+      # Docker out of docker でterraformからdockerデーモンにアクセスさせる
+      - /var/run/docker.sock:/var/run/docker.sock
+      # access host's aws config
+      - ${HOME:-${USERPROFILE:-}}/.aws:/root/.aws
+    working_dir: /workspace

@@ -25,3 +25,28 @@ https://zenn.dev/ikedam
     ```console
     curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
     ```
+
+## デプロイ
+
+デモなのでtfstateファイルがローカルに作成されます。
+tfstateファイルにECRにアクセスするためのトークンが格納されるため、
+実際の運用では適切なbackendを使用してファイルをリモートにおいてアクセス制限をかけてください。
+
+* 初期化
+
+    ```
+    docker compose run --rm terraform init
+    ```
+
+* 構築
+
+    ```
+    docker compose run --rm terraform apply
+    ```
+
+* 削除
+
+    ```
+    docker compose run --rm terraform destroy
+    ```
+
