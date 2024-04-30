@@ -14,7 +14,7 @@ services:
       - AWS_PROFILE
     volumes:
       - .:/workspace
-      # Docker out of docker でterraformからdockerデーモンにアクセスさせる
+      # docker outside of docker でterraformからdockerデーモンにアクセスさせる
       - /var/run/docker.sock:/var/run/docker.sock
       # access host's aws config
       - ${HOME:-${USERPROFILE:-}}/.aws:/root/.aws

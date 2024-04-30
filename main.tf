@@ -81,8 +81,9 @@ data "archive_file" "lambda" {
 }
 
 resource "docker_image" "lambda" {
-  name     = "${aws_ecr_repository.image_repository.repository_url}:latest"
-  platform = "linix/amd64"
+  name         = "${aws_ecr_repository.image_repository.repository_url}:latest"
+  platform     = "linix/amd64"
+  keep_locally = true
   build {
     context = "${path.module}/lambda"
   }
@@ -96,7 +97,7 @@ resource "docker_registry_image" "lambda" {
   keep_remotely = true
 
   triggers = {
-    image_id = docker_image.lambda.image_id
+    sha256 = data.archive_file.lambda.output_sha256
   }
 }
 
