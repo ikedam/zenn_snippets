@@ -1,5 +1,5 @@
-# DockerイメージでLambaを作成するTerraformテンプレート
-# IAMロールなど、直接骨子に関係ないものはmain_extra.tfにおいています。
+# CloudRunのデプロイを行うTerraformテンプレート
+
 terraform {
   required_version = "~> 1.7.0"
 
