@@ -1,0 +1,15 @@
+services:
+  terraform:
+    profiles: [dummy]
+    network_mode: bridge
+    image: hashicorp/terraform:1.7.5
+    environment:
+      - TF_LOG
+      - CLOUDSDK_CORE_PROJECT
+    volumes:
+      - .:/workspace
+      # docker outside of docker でterraformからdockerデーモンにアクセスさせる
+      - /var/run/docker.sock:/var/run/docker.sock
+      # access host's gcloud authentication
+      - ${CLOUDSDK_CONFIG:-${APPDATA:-${HOME:-}/.config}/gcloud}:/root/.config/gcloud
+    working_dir: /workspace
