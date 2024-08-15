@@ -2,9 +2,9 @@ Zenn記事用のコード置き場。
 ブランチを作ってコードを置く。
 https://zenn.dev/ikedam
 
-# ルートモジュールの切り替えによる Terraform の環境分離のデモ
+# パラメーターファイルの切り替えによる Terraform の環境分離のデモ
 
-ルートモジュールの切り替えによって dev, stg, prd の環境の切り替えを行う Terraform 実装のデモです。
+パラメーターファイルの切り替えによって dev, stg, prd の環境の切り替えを行う Terraform 実装のデモです。
 
 * 環境ごとに使用する AWS アカウントが異なる。
 * バックエンド用の S3 バケット・DynamoDB テーブルは各環境の AWS アカウント内に作成する。
@@ -17,13 +17,15 @@ https://zenn.dev/ikedam
 * 動作を試すだけならば、 DynamoDB テーブルの作成はオプションです。
 * S3 バケットや DynamoDB テーブルの設定方法や設定のベストプラクティスは Terraform のドキュメントを参照してください: https://developer.hashicorp.com/terraform/language/settings/backends/s3
 
-## バックエンドの設定
+## バックエンド/AWSアカウントの設定
 
-各環境の `env/ENV/main.tf` 内で `FIXME` となっている以下の項目について、使用する AWS アカウント、作成したバックエンド用の S3 バケット、DynamoDB テーブルを設定してください:
+各環境の `env/ENV/backend.tfbackend` および `env/ENV/terraform.tfvars` 内で `FIXME` となっている以下の項目について、使用する AWS アカウント、作成したバックエンド用の S3 バケット、DynamoDB テーブルを設定してください:
 
-* terraform.backend.s3.bucket
-* terraform.backend.s3.dynamodb_table
-* provider.aws.allowed_account_ids
+* `env/ENV/backend.tfbackend`
+    * bucket
+    * dynamodb_table
+* `env/ENV/terraform.tfvars`
+    * account_id
 
 ## ロックファイルの作成・更新
 

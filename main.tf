@@ -7,6 +7,14 @@ terraform {
       version = "~> 5.56.0"
     }
   }
+
+  backend "s3" {
+    # 具体的な設定パラメーターは init 時に与える
+  }
+}
+
+provider "aws" {
+  allowed_account_ids = [var.account_id]
 }
 
 resource "aws_dynamodb_table" "table" {

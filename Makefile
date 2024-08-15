@@ -9,11 +9,11 @@ help:	## Show target helps
 
 .PHONY: init
 init:	## run terraform init
-	docker compose run --rm terraform -chdir="env/$(ENV)" init
+	docker compose run --rm terraform init -backend-config="env/$(ENV)/backend.tfbackend" -reconfigure
 
 .PHONY: lint
 lint:	## lint terraform files
-	docker compose run --rm terraform -chdir="env/$(ENV)" validate
+	docker compose run --rm terraform validate
 	docker compose run --rm terraform fmt -recursive -check -diff .
 
 .PHONY: format
@@ -21,25 +21,18 @@ format:	## format terraform files
 	docker compose run --rm terraform fmt -recursive .
 
 .PHONY: lock
-lock:	## create/update .terraform.lock.hcl files for all environments
-	$(MAKE) lock-dev
-	$(MAKE) lock-stg
-	$(MAKE) lock-prd
-
-.PHONY: lock-%
-lock-%:
-	$(eval env := ${@:lock-%=%})
-	docker compose run --rm terraform -chdir="env/$(env)" init -backend=false
-	docker compose run --rm terraform -chdir="env/$(env)" providers lock -platform=linux_amd64 -platform=linux_arm64 -enable-plugin-cache
+lock:	## create/update .terraform.lock.hcl file
+	docker compose run --rm terraform init -backend=false
+	docker compose run --rm terraform providers lock -platform=linux_amd64 -platform=linux_arm64 -enable-plugin-cache
 
 .PHONY: plan
 plan:	## run terraform plan
-	docker compose run --rm terraform -chdir="env/$(ENV)" plan
+	docker compose run --rm terraform plan -var-file="env/$(ENV)/terraform.tfvars"
 
 .PHONY: apply
 apply:	## run terraform apply
-	docker compose run --rm terraform -chdir="env/$(ENV)" apply
+	docker compose run --rm terraform apply -var-file="env/$(ENV)/terraform.tfvars"
 
 .PHONY: destroy
 destroy:	## run terraform destroy
-	docker compose run --rm terraform -chdir="env/$(ENV)" destroy
+	docker compose run --rm terraform destroy -var-file="env/$(ENV)/terraform.tfvars"

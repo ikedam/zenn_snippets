@@ -7,3 +7,8 @@ variable "env" {
   type        = string
   description = "構築する環境名"
 }
+
+variable "account_id" {
+  type        = string
+  description = "使用するAWSアカウントID"
+}
