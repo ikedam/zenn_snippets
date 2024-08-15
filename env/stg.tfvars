@@ -1,3 +1,3 @@
 env      = "stg"
-# FIXME: 使用するアカウントIDを設定します。
-# account_id = ACCOUNTID
+# FIXME: ここに使用するGoogle Cloudプロジェクトを指定する。
+# gcp_project = "PROJECT"

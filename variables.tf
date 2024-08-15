@@ -8,7 +8,7 @@ variable "env" {
   description = "構築する環境名"
 }
 
-variable "account_id" {
-  type        = number
-  description = "使用するAWSアカウントID"
+variable "gcp_project" {
+  type        = string
+  description = "使用するGCPプロジェクトID"
 }
