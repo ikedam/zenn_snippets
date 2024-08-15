@@ -9,6 +9,6 @@ variable "env" {
 }
 
 variable "account_id" {
-  type        = string
+  type        = number
   description = "使用するAWSアカウントID"
 }
