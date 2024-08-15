@@ -2,23 +2,23 @@ terraform {
   required_version = ">= 1.9.0"
 
   required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.56.0"
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.41.0"
     }
   }
 
-  backend "s3" {
-    # FIXME: バックエンド用に作成したS3バケットとDynamoDBテーブルを指定してください。
-    # bucket         = "ACCOUNTID-tfstate-stg"
-    key            = "rootmodule.tfstate"
-    # dynamodb_table = "tfstate-lock"
+  backend "gcs" {
+    # FIXME: バックエンド用に作成したGCSバケットを指定してください。
+    # bucket = "PROJECT-tfstate-stg"
+    prefix = "rootmodule"
   }
 }
 
-provider "aws" {
-  # FIXME: ここで「使用されるはずのアカウントID」を指定する。
-  # allowed_account_ids = [ACCOUNTID]
+provider "google" {
+  # FIXME: ここに使用するGoogleプロジェクトを指定する。
+  # project = "PROJECT"
+  region  = "asia-northeast1"
 }
 
 module "main" {

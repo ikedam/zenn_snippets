@@ -2,20 +2,24 @@ terraform {
   required_version = ">= 1.9.0"
 
   required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.56.0"
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.41.0"
     }
   }
 }
 
-resource "aws_dynamodb_table" "table" {
-  name         = "${var.basename}-${var.env}"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "Id"
+resource "google_project_service" "artifactregistry" {
+  service = "artifactregistry.googleapis.com"
 
-  attribute {
-    name = "Id"
-    type = "S"
-  }
+  disable_on_destroy = false
+}
+
+resource "google_artifact_registry_repository" "repository" {
+  repository_id = "${replace(var.basename, "_", "-")}-${var.env}"
+  format        = "DOCKER"
+
+  depends_on = [
+    google_project_service.artifactregistry,
+  ]
 }
