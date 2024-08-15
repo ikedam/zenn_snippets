@@ -16,18 +16,19 @@ terraform {
   }
 }
 
-check "workspace" {
-  assert {
-    condition     = terraform.workspace != "default"
-    error_message = "You must set TF_WORKSPACE"
-  }
+resource "terraform_data" "workspace" {
+  lifecycle {
+    precondition {
+      condition     = terraform.workspace != "default"
+      error_message = "You must set TF_WORKSPACE"
+    }
 
-  assert {
-    condition     = contains(["dev", "stg", "prd"], terraform.workspace)
-    error_message = "TF_WORKSPACE must be one of `dev`, `stg`, `prd`."
+    precondition {
+      condition     = (terraform.workspace == "default") || contains(["dev", "stg", "prd"], terraform.workspace)
+      error_message = "TF_WORKSPACE must be one of `dev`, `stg`, `prd`."
+    }
   }
 }
-
 
 # 以下のようにワークスペース名を「環境.アカウントID」のフォーマットで運用する方法も可能:
 # locals {
@@ -53,7 +54,7 @@ locals {
 
 locals {
   env        = terraform.workspace
-  account_id = local.env_configs[local.env].account_id
+  account_id = lookup(local.env_configs, local.env, local.env_configs["dev"]).account_id
 }
 
 
