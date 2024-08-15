@@ -32,8 +32,14 @@ lock-%:
 	docker compose run --rm terraform -chdir="env/$(env)" init -backend=false
 	docker compose run --rm terraform -chdir="env/$(env)" providers lock -platform=linux_amd64 -platform=linux_arm64 -enable-plugin-cache
 
+.PHONY: plan
 plan:	## run terraform plan
 	docker compose run --rm terraform -chdir="env/$(ENV)" plan
 
+.PHONY: apply
 apply:	## run terraform apply
 	docker compose run --rm terraform -chdir="env/$(ENV)" apply
+
+.PHONY: destroy
+destroy:	## run terraform destroy
+	docker compose run --rm terraform -chdir="env/$(ENV)" destroy
