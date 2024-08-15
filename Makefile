@@ -9,11 +9,11 @@ help:	## Show target helps
 
 .PHONY: init
 init:	## run terraform init
-	docker compose run --rm terraform init -backend-config="env/$(ENV)/backend.tfbackend" -reconfigure
+	docker compose run --rm -e TF_WORKSPACE=$(ENV) terraform init
 
 .PHONY: lint
 lint:	## lint terraform files
-	docker compose run --rm terraform validate
+	docker compose run --rm -e TF_WORKSPACE=$(ENV) terraform validate
 	docker compose run --rm terraform fmt -recursive -check -diff .
 
 .PHONY: format
@@ -27,12 +27,12 @@ lock:	## create/update .terraform.lock.hcl file
 
 .PHONY: plan
 plan:	## run terraform plan
-	docker compose run --rm terraform plan -var-file="env/$(ENV)/terraform.tfvars"
+	docker compose run --rm -e TF_WORKSPACE=$(ENV) terraform plan
 
 .PHONY: apply
 apply:	## run terraform apply
-	docker compose run --rm terraform apply -var-file="env/$(ENV)/terraform.tfvars"
+	docker compose run --rm -e TF_WORKSPACE=$(ENV) terraform apply
 
 .PHONY: destroy
 destroy:	## run terraform destroy
-	docker compose run --rm terraform destroy -var-file="env/$(ENV)/terraform.tfvars"
+	docker compose run --rm -e TF_WORKSPACE=$(ENV) terraform destroy

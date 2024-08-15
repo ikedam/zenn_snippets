@@ -6,6 +6,7 @@ services:
     environment:
       - TF_LOG
       - TF_CLI_ARGS
+      - TF_WORKSPACE
       - TF_PLUGIN_CACHE_DIR=/workspace/.terraform.d/plugin-cache
       # inherit AWS auth
       - AWS_ACCESS_KEY_ID

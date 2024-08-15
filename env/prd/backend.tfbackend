@@ -1,4 +1,0 @@
-# FIXME: バックエンド用に作成したS3バケットとDynamoDBテーブルを指定してください。
-# bucket         = "ACCOUNDID-tfstate-prd"
-key            = "parameterfile.tfstate"
-# dynamodb_table = "tfstate-lock"
