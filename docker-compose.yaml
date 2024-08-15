@@ -8,14 +8,8 @@ services:
       - TF_CLI_ARGS
       - TF_WORKSPACE
       - TF_PLUGIN_CACHE_DIR=/workspace/.terraform.d/plugin-cache
-      # inherit AWS auth
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - AWS_SESSION_TOKEN
-      - AWS_DEFAULT_REGION
-      - AWS_PROFILE
     volumes:
       - .:/workspace
-      # access host's aws config
-      - ${HOME:-${USERPROFILE:-}}/.aws:/root/.aws
+      # access host's gcloud authentication
+      - ${CLOUDSDK_CONFIG:-${APPDATA:-${HOME:-}/.config}/gcloud}:/root/.config/gcloud
     working_dir: /workspace
