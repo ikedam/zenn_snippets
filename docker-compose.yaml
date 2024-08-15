@@ -1,0 +1,20 @@
+services:
+  terraform:
+    profiles: [dummy]
+    network_mode: bridge
+    image: hashicorp/terraform:1.9.4
+    environment:
+      - TF_LOG
+      - TF_CLI_ARGS
+      - TF_PLUGIN_CACHE_DIR=/workspace/.terraform.d/plugin-cache
+      # inherit AWS auth
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - AWS_DEFAULT_REGION
+      - AWS_PROFILE
+    volumes:
+      - .:/workspace
+      # access host's aws config
+      - ${HOME:-${USERPROFILE:-}}/.aws:/root/.aws
+    working_dir: /workspace

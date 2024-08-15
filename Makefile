@@ -1,0 +1,39 @@
+ENV := dev
+
+.PHONY: help
+help:	## Show target helps
+	@echo "set ENV variable and call targets:"
+	@echo
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+		awk 'BEGIN {FS = ":.*?## "}; {printf "\t\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+.PHONY: init
+init:	## run terraform init
+	docker compose run --rm terraform -chdir="env/$(ENV)" init
+
+.PHONY: lint
+lint:	## lint terraform files
+	docker compose run --rm terraform -chdir="env/$(ENV)" validate
+	docker compose run --rm terraform fmt -recursive -check -diff .
+
+.PHONY: format
+format:	## format terraform files
+	docker compose run --rm terraform fmt -recursive .
+
+.PHONY: lock
+lock:	## create/update .terraform.lock.hcl files for all environments
+	$(MAKE) lock-dev
+	$(MAKE) lock-stg
+	$(MAKE) lock-prd
+
+.PHONY: lock-%
+lock-%:
+	$(eval env := ${@:lock-%=%})
+	docker compose run --rm terraform -chdir="env/$(env)" init -backend=false
+	docker compose run --rm terraform -chdir="env/$(env)" providers lock -platform=linux_amd64 -platform=linux_arm64 -enable-plugin-cache
+
+plan:	## run terraform plan
+	docker compose run --rm terraform -chdir="env/$(ENV)" plan
+
+apply:	## run terraform apply
+	docker compose run --rm terraform -chdir="env/$(ENV)" apply
