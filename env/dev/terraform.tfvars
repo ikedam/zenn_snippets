@@ -1,4 +1,4 @@
 basename = "terraform-parameterfile"
 env      = "dev"
-# FIXME: 使用するアカウントIDを設定します。
-# account_id = ACCOUNDID
+# FIXME: ここに使用するGoogle Cloudプロジェクトを指定する。
+# gcp_project = "PROJECT"
