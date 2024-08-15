@@ -11,7 +11,7 @@ terraform {
   backend "s3" {
     # FIXME: バックエンド用に作成したS3バケットとDynamoDBテーブルを指定してください。
     # bucket         = "ACCOUNTID-tfstate-prd"
-    # key            = "rootmodule.tfstate"
+    key            = "rootmodule.tfstate"
     # dynamodb_table = "tfstate-lock"
   }
 }
