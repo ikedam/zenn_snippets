@@ -1,0 +1,11 @@
+services:
+  python:
+    build:
+      context: .
+    volumes:
+      - .:/app
+  terraform:
+    image: hashicorp/terraform:1.10.3
+    volumes:
+      - .:/app
+    working_dir: /app/terraform

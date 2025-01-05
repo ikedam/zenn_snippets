@@ -3,7 +3,6 @@ name = "archive-demo"
 version = "0.1.0"
 description = ""
 authors = ["ikedam"]
-readme = "README.md"
 
 packages = [
     { include = "factorial" },

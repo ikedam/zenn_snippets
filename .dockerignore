@@ -1,0 +1,11 @@
+.mypy_cache
+.pytest_cache
+/.git
+/terraform
+/tests
+/.dockerignore
+/.gitignore
+/docker-compose.yaml
+/Dockerfile
+/Makefile
+/README.md
