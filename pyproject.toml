@@ -5,6 +5,10 @@ description = ""
 authors = ["ikedam"]
 readme = "README.md"
 
+packages = [
+    { include = "factorial" },
+]
+
 [tool.poetry.dependencies]
 python = "^3.12"
 
