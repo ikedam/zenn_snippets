@@ -1,6 +1,12 @@
+# Python temporary files
 .mypy_cache
 .pytest_cache
+__pycache__
+
+# git metadata
 /.git
+
+# files not required for container
 /terraform
 /tests
 /.dockerignore

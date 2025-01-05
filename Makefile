@@ -17,3 +17,14 @@ check-in-docker:	## Run lint and unit tests (without docker)
 check:	## Run lint and unit tests (with docker)
 	docker compose run --rm python make check-in-docker
 
+.PHONY: terraform-init
+terraform-init:	## Run terraform init
+	docker compose run --rm terraform init
+
+.PHONY: terraform-format
+terraform-format:	## Run terraform fmt
+	docker compose run --rm terraform fmt -recursive .
+
+.PHONY: terraform-plan
+terraform-plan:	## Run terraform plan
+	docker compose run --rm terraform plan
