@@ -47,3 +47,9 @@ data "archive_file" "source" {
 output "source_hash" {
   value = data.archive_file.source.output_base64sha256
 }
+
+# dockerignore_excludes の中身を確認したい場合は
+# ここをアンコメントして plan を実行すること。
+# output "check_excludes" {
+#   value = local.dockerignore_excludes
+# }
