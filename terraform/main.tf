@@ -43,3 +43,7 @@ data "archive_file" "source" {
   excludes         = local.dockerignore_excludes
   output_file_mode = "0644"
 }
+
+output "source_hash" {
+  value = data.archive_file.source.output_base64sha256
+}
