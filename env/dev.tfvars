@@ -1,4 +1,3 @@
-basename = "terraform-parameterfile"
-env      = "stg"
+env      = "dev"
 # FIXME: 使用するアカウントIDを設定します。
 # account_id = ACCOUNTID

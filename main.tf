@@ -9,7 +9,9 @@ terraform {
   }
 
   backend "s3" {
-    # 具体的な設定パラメーターは init 時に与える
+    bucket         = "${var.account_id}-tfstate-${var.env}"
+    key            = "opentofu-env-demo.tfstate"
+    dynamodb_table = "tfstate-lock"
   }
 }
 

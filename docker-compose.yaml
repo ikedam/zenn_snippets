@@ -1,12 +1,11 @@
 services:
-  terraform:
+  opentofu:
     profiles: [dummy]
     network_mode: bridge
-    image: hashicorp/terraform:1.9.4
+    image: ghcr.io/opentofu/opentofu:1.9.0
     environment:
       - TF_LOG
       - TF_CLI_ARGS
-      - TF_PLUGIN_CACHE_DIR=/workspace/.terraform.d/plugin-cache
       # inherit AWS auth
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
