@@ -20,7 +20,7 @@ OpenTofu で dev, stg, prd の環境の切り替えを行うデモです。
     * 上記以外のリソース名にする場合は [`main.tf`](./main.tf) を適当に変更してください。
 * 動作を試すだけならば、 DynamoDB テーブルの作成はオプションです。
     * DynamoDB テーブルを使わない場合は [`main.tf`](./main.tf) の `dynamodb_table =` の部分をコメントアウトしてください。
-* S3 バケットや DynamoDB テーブルの設定方法や設定のベストプラクティスは Terraform のドキュメントを参照してください: https://opentofu.org/docs/language/settings/backends/s3/
+* S3 バケットや DynamoDB テーブルの設定方法や設定のベストプラクティスは OpenTofu のドキュメントを参照してください: https://opentofu.org/docs/language/settings/backends/s3/
 
 ## バックエンド/AWSアカウントの設定
 
