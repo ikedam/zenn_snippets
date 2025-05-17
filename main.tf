@@ -12,10 +12,9 @@ terraform {
       source  = "hashicorp/archive"
       version = "2.4.2"
     }
-    # https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "3.0.2"
+    containerregistry = {
+      source  = "tf-containerregistry.ikedam.jp/ikedam/containerregistry"
+      version = "0.2.5"
     }
   }
 }
@@ -64,49 +63,6 @@ locals {
 }
 
 
-resource "google_service_account" "imagepush" {
-  account_id = "${var.basename}-imagepush"
-
-  depends_on = [
-    google_project_service.iam,
-  ]
-}
-
-resource "google_service_account_key" "imagepush" {
-  service_account_id = google_service_account.imagepush.name
-}
-
-resource "google_artifact_registry_repository_iam_member" "imagepush" {
-  repository = google_artifact_registry_repository.image_registry.name
-  role       = "roles/artifactregistry.writer"
-  member     = "serviceAccount:${google_service_account.imagepush.email}"
-}
-
-# https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs#registry-credentials
-provider "docker" {
-  # https://cloud.google.com/artifact-registry/docs/docker/authentication?hl=ja#json-key
-  registry_auth {
-    address  = "https://${google_artifact_registry_repository.image_registry.location}-docker.pkg.dev"
-    username = "_json_key_base64"
-    password = google_service_account_key.imagepush.private_key
-  }
-}
-
-# サービスアカウントの代わりに以下でもいける。
-# ただし Terraform のステートファイルに実行者のトークン(60分有効)が保存されてしまうため危険。
-# プッシュ専用のサービスアカウントを作るほうがセキュリティリスクの影響範囲を抑えられる。
-# data "google_client_config" "current" {
-# }
-
-# provider "docker" {
-#   # https://cloud.google.com/artifact-registry/docs/docker/authentication?hl=ja#token
-#   registry_auth {
-#     address  = "https://${google_artifact_registry_repository.image_registry.location}-docker.pkg.dev"
-#     username = "oauth2accesstoken"
-#     password = data.google_client_config.current.access_token
-#   }
-# }
-
 # イメージのリビルド判定用
 data "archive_file" "webapp" {
   type        = "zip"
@@ -118,29 +74,32 @@ data "archive_file" "webapp" {
   )
 }
 
-resource "docker_image" "webapp" {
-  name         = "${local.registry_uri}/webapp:latest"
-  platform     = "linix/amd64"
-  keep_locally = true
-  build {
-    context = "${path.module}/webapp"
+resource "containerregistry_image" "webapp" {
+  image_uri = "${local.registry_uri}/webapp:latest"
+
+  # build には、 docker compose v2 互換のビルド指定を記述します。
+  # See: https://docs.docker.com/reference/compose-file/build/
+  # ただし、 label の指定だけは build と同レベルに存在する labels で指定を行ってください。
+  build = jsonencode({
+    context   = "${path.module}/webapp"
+    platforms = ["linux/amd64"]
+  })
+
+  labels = {
+    sha256 = data.archive_file.webapp.output_sha256
   }
+
   triggers = {
     sha256 = data.archive_file.webapp.output_sha256
   }
-}
 
-resource "docker_registry_image" "webapp" {
-  name          = docker_image.webapp.name
-  keep_remotely = true
-
-  triggers = {
-    sha256 = data.archive_file.webapp.output_sha256
+  auth = {
+    google_artifact_registry = {}
   }
 }
 
 locals {
-  repo_image_uri = "${local.registry_uri}/webapp@${docker_registry_image.webapp.sha256_digest}"
+  repo_image_uri = "${local.registry_uri}/webapp@${containerregistry_image.webapp.sha256_digest}"
 }
 
 resource "google_cloud_run_v2_service" "webapp" {
