@@ -1,4 +1,4 @@
-Firestore に BigQuery を併用して強力なクエリー機能を実現する
+Firestore に BigQuery を併用して柔軟なクエリーを実現する
 
 # 概要
 
@@ -25,7 +25,7 @@ Firestore とリレーショナルデータベース (RDB) の用語は以下の
 [Firestore](https://cloud.google.com/products/firestore?hl=ja) はサーバーレスのドキュメントデータベースで、以下の機能を提供します:
 
 * ドキュメントデータベースなので、アプリケーションで使用しているデータ構造体をそのまま保存できる。
-    * OR マッピング的な機能が Firestore のライブラリー自体に提供されているイメージ。
+    * OR マッピング的な機能が Firestore のライブラリー自体で提供されているイメージ。
     * 例えば Go 言語の場合、構造体 (struct) を直接 Firestore から取り出したり、 Firestore に保存したりできます。
         * [cloud.google.com/go/firestore#Reading](https://pkg.go.dev/cloud.google.com/go/firestore#hdr-Reading)
         * [cloud.google.com/go/firestore#func (*DocumentRef) Create](https://pkg.go.dev/cloud.google.com/go/firestore#DocumentRef.Create)
@@ -44,20 +44,20 @@ Firestore では条件を指定してドキュメントを検索するクエリ�
 * 複数のフィールドを条件やソート条件に指定する場合、検索条件に対応したインデックスを先に定義しておく必要がある。
     * [インデックスの管理  |  Firestore in Native mode  |  Google Cloud](https://cloud.google.com/firestore/native/docs/query-data/indexing?hl=ja)
     * あるコレクションを様々な条件で検索したい場合、検索条件ごとにインデックスを作成しておく必要がある。
-    * 一般的な RDB ではインデックスを作っていないカラムであっても、性能が落ちるだけで条件に指定してクエリーを実行できるが、Firestore の場合はインデックスを作っていないフィールド(の組み合わせ)でクエリーを実行するとエラーになる。
+    * 一般的な RDB では、性能は落ちるがインデックスに組み込んでいないカラムを条件に組み込んでクエリーを実行できるが、Firestore の場合はインデックスを作っていないフィールドを条件に組み込んでクエリーを実行するとエラーになる。
 * OR 条件や in 演算子で指定できる条件は 30 個まで。
     * [データのクエリとフィルタ  |  Firestore in Native mode  |  Google Cloud#OR クエリの上限](https://cloud.google.com/firestore/native/docs/query-data/queries?hl=ja#limits_on_or_queries)
 * 条件に指定したフィールドが存在しないドキュメントは検索対象にならない。
-    * [データのクエリとフィルタ  |  Firestore in Native mode  |  Google Cloud#OR クエリの上限#orderBy とフィールドの存在](https://cloud.google.com/firestore/native/docs/query-data/queries?hl=ja#orderby_and_existence)
+    * [データのクエリとフィルタ  |  Firestore in Native mode  |  Google Cloud#orderBy とフィールドの存在](https://cloud.google.com/firestore/native/docs/query-data/queries?hl=ja#orderby_and_existence)
     * ドキュメントに検索条件になる新しいフィールドを追加したときに、過去のドキュメントを検索できない。
 * Join に相当する操作ができない。
-    * 別のコレクションに対するクエリーを並列実行してアプリケーションで結果を結合する、前のクエリーの結果から次のクエリーを構築してクエリーを直列実行するなどの対応が必要。
+    * 複数のコレクションに対するクエリーを並列実行してアプリケーションで結果を結合する、前のクエリーの結果から次のクエリーを構築してクエリーを直列実行するなどの対応が必要。
 * GROUP BY に相当する集計クエリーがない。
-    * 効率よくあるフィールドの値域を取得することが難しい。
+    * あるフィールドの値域を効率よく取得することが難しい。
 
-課題、できない、といった否定的な表現をしてはいるものの、実際にはいずれも Firestore の欠点というよりは特性であって、また、柔軟なクエリー実行ができないというよりは実行するクエリーについて事前に計画立てておかないといけないという製品特性と考えるのが適切です。
+課題、できない、といった否定的な表現をしたけれども、実際にはこれらは Firestore の欠点というよりは単に特性であって、また、柔軟なクエリー実行ができないというよりは、実行するクエリーについて事前に計画立てておかないといけないという製品特性と考えるのが適切です。
 
-一方で、Firestore の強みを活かしつつ、柔軟に(無計画にとも言える)クエリーも実行できるといいのになあ、と思うことがあります。
+一方で、Firestore の強みを活かしつつ、柔軟に (無計画にとも言える) クエリーも実行できるといいのになあ、という場面はしばしばあります。
 
 # BigQuery を用いたクエリー実行
 
@@ -74,25 +74,27 @@ Firestore では条件を指定してドキュメントを検索するクエリ�
     * [変更データ キャプチャを使用してテーブル更新をストリーミングする  |  BigQuery  |  Google Cloud](https://cloud.google.com/bigquery/docs/change-data-capture?hl=ja)
     * どこまでリアルタイム性を確保するかはドキュメントに記載の通り `max_staleness` オプションで調整する。性能・費用にかかわるチューニングパラメーターになる様子。
 
-
 Firestore と比較すると、以下のような差異があります:
 
 * Firestore のほうが高速
     * BigQuery が低速と言うよりも、速度を重視した製品ではないという表現が妥当。
     * 処理内容にもよるが Firestore が数十ミリ秒単位の応答時間を期待できるサービス(要出典)なのに対して、 BigQuery では秒単位の応答時間がかかることも想定しないといけない。
-* Firestore は処理対象にしたドキュメント単位での課金。BigQuery はクエリーのたびにすべてのレコードが処理対象になる。
+* Firestore は処理対象にしたドキュメント単位での課金。BigQuery はクエリーのたびにテーブル内のすべてのレコードが課金対象になる。
 
-これらを整理し、以下のような形で Firestore と BigQuery を併用するアーキテクチャーを考えます:
+以下のような形で Firestore と BigQuery を併用するアーキテクチャーを構築して、いいとこ取りを目指します:
 
 * アプリケーションのメインデータベースとしては Firestore を使用する。
     * BigQuery をメインデータベースに使うのは性能・費用の点から適切でない。
-    * 特にここで言う性能は、ユーザー体験の観点での性能。
+    * ここで言う性能は、特にユーザー体験に焦点を当てている。
 * 複雑なクエリーについては BigQuery を使用する。
+    * 特にユーザーが様々な検索条件を都合に合わせて指定できるような場面での利用を想定しており、そういう場面ではユーザーは忍耐強く検索結果を待ってくれる (ユーザー体験が大きく落ちることがない) という想定。
+    * むしろ多少時間がかかったほうがありがたみもあるのではないか。
 
+# Firestore から BigQuery へのデータ同期
 
-# Firestore から BigQuery へのデータ同期方法
+## 実現方法の検討
 
-Firestore のデータを BigQuery に反映する (BigQuery からクエリーする) 方法はいくつか考えられます。
+Firestore のデータを BigQuery に反映する方法はいくつか考えられます。
 
 1. インポート: Firestore のエクスポートデータを BigQuery にロードする
     * [Firestore エクスポートからのデータの読み込み  |  BigQuery  |  Google Cloud](https://cloud.google.com/bigquery/docs/loading-data-cloud-firestore?hl=ja)
@@ -106,15 +108,15 @@ Firestore のデータを BigQuery に反映する (BigQuery からクエリー�
 
 各方法の比較:
 
-|                |インポート|Firebase|CDC|Pub/Sub|
-|:---------------|:--------:|:------:|:-:|:-----:|
-|データの即時反映|          |X       |X  |X      |
-|Firebase 不要   |X         |        |X  |X      |
-|実装コスト      |中        |小      |大 |中     |
+|             |インポート|Firebase|CDC |Pub/Sub|
+|:------------|:--------:|:------:|:--:|:-----:|
+|データの反映 |定期      |即時    |即時|即時   |
+|Firebase     |不要      |必要    |不要|不要   |
+|実装コスト   |中        |小      |大  |中     |
 
 今回は以下の理由から、 4 の Cloud Pub/Sub の BigQuery サブスクリプションの方法を採用しました。
 
-* 1 のインポート方式はアプリケーションからのクエリーの利用のために定期的にエクスポート・インポートを行う仕組みの開発が必要で、どうせ開発作業があるならばデータが即時反映される他の方法を取ったほうが有利であること。
+* 1 のインポート方式は、アプリケーションからのクエリーの利用のために定期的にエクスポート・インポートを行う仕組みのためにある程度の開発作業が必要。どうせ開発作業があるならばデータが即時反映される他の方法を取ったほうが有利と判断した。
     * 他の方式に比べて仕組み自体がシンプルに収まるので、頻繁に行わない手作業での分析用途などであればインポート方式は検討に値すると思います。
 * 今回開発しているアプリケーションでは Firebase を使用していないこと、また、IaC での構成管理が難しいことから、2 の Firebase extension 方式は採用しない。
     * ただし、たぶん内部的には 3 の変更データキャプチャの実装を Firebase の開発チームがしっかり行ったものなので、高い品質を期待できる。
@@ -127,9 +129,9 @@ Firestore のデータを BigQuery に反映する (BigQuery からクエリー�
     * さらに、エラーハンドリングやリトライについての設計も必要なので実装コストが非常に高く付くと判断した。
     * 別の開発言語であればもう少し実装は容易かも。
 
-# BigQuery サブスクリプションを使用した Firestore から BigQuery への同期
+## 同期処理の実装
 
-実装コード (あまり整理していない)
+実装コード
 
 https://github.com/ikedam/zenn_snippets/tree/firestore_to_bigquery
 
@@ -142,12 +144,14 @@ https://github.com/ikedam/zenn_snippets/tree/firestore_to_bigquery
 
 2. Eventarc から Cloud Run functions を起動する。
     * なお、内部的には Eventarc → Pub/Sub トピック → Pub/Sub サブスクリプション → Cloud Run functions というパスが構成される。
-    * Pub/Sub の トピック / Subscription は自動で作成されるため、 Terraform などでリトライなどのパラメーター調整ができないのが難点。
+    * Pub/Sub の トピック / サブスクリプション は自動で作成されるため、 Terraform などでリトライなどのパラメーター調整ができないのが難点。
 
 3. Cloud Run functions で Protocol Buffer フォーマットで届くメッセージをパース、BigQuery に書き込みたいフィールドを抽出して JSON データとして構成し、 Pub/Sub トピック に送信する。
     * [Firestore トリガー  |  Cloud Run functions Documentation  |  Google Cloud](https://cloud.google.com/functions/docs/calling/cloud-firestore?hl=ja)
     * 無関係なフィールドの変更の場合はイベントを無視する。
     * イベント内容に従って UPSERT / DELETE を決定する。
+    * Cloud Run functions は複数のコレクション・テーブルで共通のものを使用できるようにする。
+        * イベント内容から特定できるコレクション名から、処理パラメーターを切り替える。
 
 4. [BigQuery サブスクリプション](https://cloud.google.com/pubsub/docs/bigquery?hl=ja) を設定した Pub/Sub トピックで BigQuery テーブルの更新を行う。
 
@@ -155,8 +159,9 @@ https://github.com/ikedam/zenn_snippets/tree/firestore_to_bigquery
     * 変更データキャプチャでの更新用にプライマリーキーを設定する必要がある。
         * [変更データ キャプチャを使用してテーブル更新をストリーミングする  |  BigQuery  |  Google Cloud#前提条件](https://cloud.google.com/bigquery/docs/change-data-capture?hl=ja#prerequisites)
 
-FIXME: アーキテクチャー図を貼る。
+2つのコレクション・テーブルを同期する場合のコンポーネントの接続は以下のようになります:
 
+![アーキテクチャー図](https://storage.googleapis.com/zenn-user-upload/7b601d7141e3-20250816.png)
 
 # 残っている課題
 
