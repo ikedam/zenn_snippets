@@ -33,4 +33,4 @@ apply:	## run terraform apply
 
 .PHONY: destroy
 destroy:	## run terraform destroy
-	docker compose run --rm terraform destroy
+	docker compose run --rm ${COMPOSE_OPTS} opentofu destroy

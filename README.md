@@ -69,9 +69,6 @@ SELECT * FROM `f2bdemo.testdata` LIMIT 10;
 
 ## インフラの削除
 
-以下のコマンドで指定した環境について `terraform destroy` を実行します。
-**GCP の認証が必要です。**
-
-```console
-make destroy ENV=dev
+```
+make destroy
 ```

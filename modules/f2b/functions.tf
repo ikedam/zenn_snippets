@@ -3,6 +3,8 @@ resource "google_cloud_run_v2_service" "f2b" {
   location = var.region
   ingress  = "INGRESS_TRAFFIC_INTERNAL_ONLY"
 
+  deletion_protection = var.deletion_protection
+
   template {
     service_account = google_service_account.f2b.email
 

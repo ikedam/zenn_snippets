@@ -13,6 +13,9 @@ module "f2b" {
   dataset_id              = google_bigquery_dataset.demo.dataset_id
   image_repository_uri    = "${local.registry_uri}/f2b"
 
+  # デモ用途なので削除 OK
+  deletion_protection = false
+
   rules = {
     Testdata = {
       table = google_bigquery_table.testdata.table_id

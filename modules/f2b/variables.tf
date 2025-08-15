@@ -30,3 +30,9 @@ variable "rules" {
     fields = optional(list(string))
   }))
 }
+
+variable "deletion_protection" {
+  description = "deletion protection"
+  type        = bool
+  default     = true
+}
