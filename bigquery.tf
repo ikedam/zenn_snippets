@@ -22,6 +22,10 @@ resource "google_bigquery_table" "testdata" {
   # デモ用途なので削除 OK
   deletion_protection = false
 
+  # チューニングパラメーター
+  # データの反映遅延の許容時間
+  max_staleness = var.max_staleness
+
   table_constraints {
     primary_key {
       columns = ["ID"]
