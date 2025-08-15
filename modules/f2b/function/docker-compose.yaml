@@ -1,0 +1,11 @@
+services:
+  f2b:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - CLOUDSDK_CORE_PROJECT
+    volumes:
+      - ${CLOUDSDK_CONFIG:-${APPDATA:-${HOME:-}/.config}/gcloud}:/home/nonroot/.config/gcloud

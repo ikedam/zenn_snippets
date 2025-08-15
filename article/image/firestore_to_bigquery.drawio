@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0" version="28.1.0">
+  <diagram name="ページ1" id="KE8QagN2EVYPFxoBFCbj">
+    <mxGraphModel dx="594" dy="380" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="raQoqhT6zYZhzPvqV-H7-1" target="raQoqhT6zYZhzPvqV-H7-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-1" value="Firestore&lt;br&gt;コレクション" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="50" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="raQoqhT6zYZhzPvqV-H7-2" target="raQoqhT6zYZhzPvqV-H7-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-2" value="Firestore&lt;br&gt;コレクション" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="raQoqhT6zYZhzPvqV-H7-3" target="raQoqhT6zYZhzPvqV-H7-11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-3" value="EventArc トリガー" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="50" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="raQoqhT6zYZhzPvqV-H7-4" target="raQoqhT6zYZhzPvqV-H7-11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-4" value="EventArc トリガー" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" edge="1" parent="1" source="raQoqhT6zYZhzPvqV-H7-11" target="raQoqhT6zYZhzPvqV-H7-13">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="570" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-11" value="Cloud Run Functions" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="354" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="raQoqhT6zYZhzPvqV-H7-12" target="raQoqhT6zYZhzPvqV-H7-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-12" value="&lt;div&gt;Pub/Sub&lt;/div&gt;&lt;div&gt;(BigQuery サブスクリプション)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="50" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="raQoqhT6zYZhzPvqV-H7-13" target="raQoqhT6zYZhzPvqV-H7-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-13" value="&lt;div&gt;Pub/Sub&lt;/div&gt;&lt;div&gt;(BigQuery サブスクリプション)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="150" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="raQoqhT6zYZhzPvqV-H7-11" target="raQoqhT6zYZhzPvqV-H7-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="580" y="190" as="sourcePoint" />
+            <mxPoint x="640" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-16" value="BigQuery テーブル" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="730" y="50" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="raQoqhT6zYZhzPvqV-H7-17" value="BigQuery テーブル" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="730" y="150" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
