@@ -172,7 +172,7 @@ https://github.com/ikedam/zenn_snippets/tree/firestore_to_bigquery
 * BigQuery サブスクリプション作成後に BigQuery テーブルを再作成すると、 BigQuery サブスクリプションから BigQuery テーブルへの接続が再構成されない様子。 (あまりちゃんと検証していない)
     * スキーマ変更などで BigQuery テーブルが再作成される場合、 BigQuery サブスクリプションを再構成するように Terraform を構成する必要がありそう。
 * 何らかの理由で Firestore と BigQuery の同期がズレた場合の再同期の方法が未確認。
-    * 変更データキャプチャーを優子にしていると DML ステートメントが使えなくなるとのことなので、インポートと同等の仕組みで最新のスナップショットを上書きする事ができない。
+    * 変更データキャプチャーを有効にしていると DML ステートメントが使えなくなるとのことなので、インポートと同等の仕組みで最新のスナップショットを上書きする事ができない。
         * [変更データ キャプチャを使用してテーブル更新をストリーミングする  |  BigQuery  |  Google Cloud#制限事項](https://cloud.google.com/bigquery/docs/change-data-capture?hl=ja#limitations)
 * BigQuery で変更データキャプチャを行ったときの費用影響が結局よく分からない。そのため、 `max_staleness` をどうチューニングするのが良いかが不明。
     * [変更データ キャプチャを使用してテーブル更新をストリーミングする  |  BigQuery  |  Google Cloud](https://cloud.google.com/bigquery/docs/change-data-capture?hl=ja)
