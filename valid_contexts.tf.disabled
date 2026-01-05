@@ -1,0 +1,62 @@
+resource "google_secret_manager_secret" "state_test_source" {
+  secret_id = "${var.basename}-state-test-source"
+
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "state_test_source" {
+  secret = google_secret_manager_secret.state_test_source.id
+
+  secret_data_wo         = "state-test-data"
+  secret_data_wo_version = 1
+}
+
+# ephemeral リソースを使ったコピー
+resource "google_secret_manager_secret" "state_test_target_ephemeral" {
+  secret_id = "${var.basename}-state-test-target-ephemeral"
+
+  replication {
+    auto {}
+  }
+}
+
+ephemeral "google_secret_manager_secret_version" "state_test_source_by_ephemeral" {
+  secret = google_secret_manager_secret.state_test_source.id
+
+  depends_on = [google_secret_manager_secret_version.state_test_source]
+}
+
+/*
+# NG: write-only argument 以外には設定できない。
+resource "google_secret_manager_secret_version" "state_test_target_ephemeral" {
+  secret = google_secret_manager_secret.state_test_target_ephemeral.id
+
+  secret_data_wo         = ephemeral.google_secret_manager_secret_version.state_test_source_by_ephemeral.secret_data
+  secret_data_wo_version = ephemeral.google_secret_manager_secret_version.state_test_source_by_ephemeral.version
+}
+*/
+
+/*
+# NG: local 変数を経由しても write-only argument 以外には設定できない。
+locals {
+  version = ephemeral.google_secret_manager_secret_version.state_test_source_by_ephemeral.version
+}
+
+resource "google_secret_manager_secret_version" "state_test_target_ephemeral" {
+  secret = google_secret_manager_secret.state_test_target_ephemeral.id
+
+  secret_data_wo         = ephemeral.google_secret_manager_secret_version.state_test_source_by_ephemeral.secret_data
+  secret_data_wo_version = "${local.version}0"
+}
+*/
+
+/*
+# NG: ルートモジュールの output には使えない
+output "version" {
+  value     = ephemeral.google_secret_manager_secret_version.state_test_source_by_ephemeral.version
+  ephemeral = true
+}
+*/
+
