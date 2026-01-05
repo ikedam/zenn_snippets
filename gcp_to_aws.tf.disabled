@@ -1,0 +1,19 @@
+# GCPのSecret ManagerからAWSの認証情報を取得する。
+# ここでは アクセスキーID:シークレットアクセスキー のフォーマットで入れている。
+ephemeral "google_secret_manager_secret_version" "aws_key" {
+  secret = var.awskey_secret_id
+}
+
+provider "aws" {
+  region = var.aws_region
+
+  # GCPのSecret Managerから取得した認証情報でアクセスする。
+  access_key = split(":", ephemeral.google_secret_manager_secret_version.aws_key.secret_data)[0]
+  secret_key = split(":", ephemeral.google_secret_manager_secret_version.aws_key.secret_data)[1]
+}
+
+data "aws_caller_identity" "current" {}
+
+output "aws_caller_identity" {
+  value = data.aws_caller_identity.current.arn
+}

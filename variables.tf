@@ -4,6 +4,13 @@ variable "google_project" {
 }
 
 # tflint-ignore: terraform_unused_declarations
+variable "aws_region" {
+  type        = string
+  description = "AWSのリージョン"
+  default     = "ap-northeast-1"
+}
+
+# tflint-ignore: terraform_unused_declarations
 variable "basename" {
   type        = string
   description = "構築するリソースの共通prefix"
@@ -15,4 +22,11 @@ variable "source_secret_id" {
   type        = string
   description = "手動作成したコピー元のシークレットID"
   default     = "ephemeraltest-copy-source"
+}
+
+# tflint-ignore: terraform_unused_declarations
+variable "awskey_secret_id" {
+  type        = string
+  description = "AWSの認証情報を含むシークレットID"
+  default     = "ephemeraltest-awskey"
 }
