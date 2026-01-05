@@ -1,0 +1,24 @@
+services:
+  terraform:
+    profiles: [dummy]
+    network_mode: bridge
+    image: hashicorp/terraform:1.14.3
+    environment:
+      - TF_LOG
+      - TF_CLI_ARGS
+    volumes:
+      - .:/workspace
+      - ${CLOUDSDK_CONFIG:-${APPDATA:-${HOME:-}/.config}/gcloud}:/root/.config/gcloud
+    working_dir: /workspace
+  tflint:
+    profiles: [dummy]
+    network_mode: bridge
+    image: ghcr.io/terraform-linters/tflint:v0.60.0
+    environment:
+      # --recursive で使用する場合、各モジュールのlintで使用する設定ファイルが各モジュールにある想定になってしまう。
+      # 強制的にリポジトリールートのファイルを参照させる。
+      - TFLINT_CONFIG_FILE=/workspace/.tflint.hcl
+      - TFLINT_LOG
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
